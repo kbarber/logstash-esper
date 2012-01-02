@@ -3,7 +3,6 @@ require 'jars/esper-4.4.0.jar'
 require 'jars/commons-logging-1.1.1.jar'
 require 'jars/antlr-runtime-3.2.jar'
 require 'jars/cglib-nodep-2.2.jar'
-require 'bunny'
 require 'json'
 require 'erb'
 
@@ -39,7 +38,7 @@ module EsperFoo
               "@type"        => "correlated",
               "@tags"        => [],
               "@fields"      => match,
-              "@timestamp"   => "2011-12-31T04:27:33.279000Z",
+              "@timestamp"   => time_iso8601,
               "@source_host" => "kb.local",
               "@source_path" => "/",
               "@message"     => message,
@@ -57,6 +56,11 @@ module EsperFoo
           puts "-(type:#{event.class}) " + event.getUnderlying.inspect
         end
       end
+    end
+
+    def time_iso8601
+      time = Time.now.utc
+      return "%s.%06d%s" % [time.strftime("%Y-%m-%dT%H:%M:%S"), time.tv_usec, "Z"]
     end
   end
 
