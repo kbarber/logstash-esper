@@ -1,0 +1,9 @@
+#!/usr/bin/env jruby
+
+$: << File.dirname($0) + "/../lib"
+
+require 'rubygems'
+require 'esperfoo/application'
+
+foo = EsperFoo::Application.new(ARGV)
+foo.run()
