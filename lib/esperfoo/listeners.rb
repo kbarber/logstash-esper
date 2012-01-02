@@ -11,11 +11,15 @@ module EsperFoo
   class Listener
     include com.espertech.esper.client.UpdateListener
 
+    # Initialize this listener object with the statement that it relates to and
+    # a reference to the mq object for publishing events back to a queue.
     def initialize(statement, mq)
       @statement = statement
       @mq = mq
     end
 
+    # Update is called every time there is a new event match event based on
+    # the statement that this listener object is registered to.
     def update(newEvents, oldEvents)
       if newEvents then
         puts "newEvents matched: "
@@ -43,8 +47,11 @@ module EsperFoo
               "@source_path" => "/",
               "@message"     => message,
             }
+
+            # Print the event to stdout
             puts "- " + new_event.to_json
 
+            # Post the event to MQ
             @mq.publish(new_event.to_json)
           end
         end
@@ -58,9 +65,11 @@ module EsperFoo
       end
     end
 
+    # Generate the current time as an ISO8601 compatible timestamp
     def time_iso8601
       time = Time.now.utc
-      return "%s.%06d%s" % [time.strftime("%Y-%m-%dT%H:%M:%S"), time.tv_usec, "Z"]
+      return "%s.%06d%s" % [time.strftime("%Y-%m-%dT%H:%M:%S"), time.tv_usec,
+        "Z"]
     end
   end
 
@@ -68,7 +77,10 @@ module EsperFoo
   class UnmatchedListener
     include com.espertech.esper.client.UnmatchedListener
 
+    # Update here is called every time there is an unmatched event. Its only
+    # really useful for debugging.
     def update(event)
+      # TODO: post this to a debug channel
       puts "unmatched:\n- " + event.getUnderlying.inspect
     end
   end

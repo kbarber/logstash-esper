@@ -1,6 +1,5 @@
 require 'esperfoo/mq'
 require 'esperfoo/esper'
-require 'esperfoo/statement'
 
 module EsperFoo
   class Application
@@ -12,8 +11,11 @@ module EsperFoo
       # Create mq object
       mq = EsperFoo::Mq.new
 
-      # Esper
+      # Esper object
       esper = EsperFoo::Esper.new(mq)
+
+      # Lets create a new statement
+      # TODO: statement creation should be from a configuration file
       statement = {
         :name => "count_every_5_seconds",
         :expression => "select count(*) as count from event.win:time_batch(5 sec) having count(*) > 0",
@@ -21,7 +23,7 @@ module EsperFoo
       }
       esper.create_statement(statement)
 
-      # MQ
+      # Subscribe to inbound MQ events
       mq.subscribe
     end
   end
