@@ -4,6 +4,7 @@ require 'jars/commons-logging-1.1.1.jar'
 require 'jars/antlr-runtime-3.2.jar'
 require 'jars/cglib-nodep-2.2.jar'
 require 'esperfoo/listeners'
+require 'esperfoo/statement'
 
 module EsperFoo
   class Esper
@@ -17,14 +18,14 @@ module EsperFoo
 
       # Add logstash event type
       @ep_config.addEventType("event", {
-        "@source"      => "string",
-        "@type"        => "string",
-        "@tags"        => "string",
-        "@fields"      => {},
-        "@timestamp"   => "string",
-        "@source_host" => "string",
-        "@source_path" => "string",
-        "@message"     => "string",
+        "source"      => "string",
+        "type"        => "string",
+        "tags"        => "string",
+        "fields"      => {},
+        "timestamp"   => "string",
+        "source_host" => "string",
+        "source_path" => "string",
+        "message"     => "string",
       })
 
       # Register unmatched listener

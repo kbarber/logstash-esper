@@ -40,6 +40,9 @@ module EsperFoo
       @in_queue.subscribe({:ack => true}) do |data|
         payload = JSON.parse(data[:payload])
 
+        # Strip out @ symbols
+        payload = clean_payload(payload)
+
         # TODO: this should be output through a debug channel
         puts payload.inspect
 
@@ -52,6 +55,14 @@ module EsperFoo
     def publish(message)
       # TODO: queue name and configuration should be in a config file
       @out_exchange.publish(message, :persistent => true, :key => "esperfooin", :mandatory => true)
+    end
+
+    def clean_payload(payload)
+      new_payload = {}
+      payload.each do |k,v|
+        new_payload[k.gsub(/^@/,'')] = v
+      end
+      new_payload
     end
   end
 end
